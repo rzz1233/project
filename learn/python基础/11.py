@@ -5,4 +5,4 @@
 # str = 'hello world'
 lis1=''.join(list('hello world'))
 print(list('hello world'))
-# print(lis1)
+print(lis1)
