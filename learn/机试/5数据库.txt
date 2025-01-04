@@ -1,0 +1,24 @@
+五、题目：假设有一个商品表（product），包含字段：商品ID（id）、商品名称（name）、商品价格（price）、商品库存（stock），请按照以下要求创建表并实现以下操作：
+1.创建商品表，包含以上四个字段，其中商品ID为主键，价格为DECIMAL类型，库存为INT类型；
+2.向商品表中插入三条商品信息，分别为“小米手机”（价格为1999元，库存为100台）、“华为手机”（价格为2999元，库存为50台）、“苹果手机”（价格为5999元，库存为20台）；
+3.查询所有商品的信息；
+4.查询价格低于3000元的商品信息；
+5.将“小米手机”的价钱修改为2299元；
+6.将“苹果手机”的库存减少10台；
+7.删除“华为手机”的信息；
+8.查询商品表中所有商品的库存总量。
+
+1.
+create table product(id int primary key,
+name varchar(20),
+price DECIMAL,
+stock int
+);
+2. insert into product values(1,"小米手机",1999,100),(2,"华为手机",2999,50),(3,"苹果手机",5999,20);
+3.select * from product;
+4. select * from product where price<3000;
+5. update product set price=2299 where name="小米手机";
+6. update product set stock = stock-10 where name ="苹果手机";
+7. delete from product where name="华为手机";
+8. select sum(stock) from product;
+
