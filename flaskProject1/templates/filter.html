@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{#过滤器#}
+{{ dict.name|length }}-{{ dict.age }}
+<div>{{ mytime|datetime }}</div>
+{#控制语句#}
+{% if dict.age > 18 %}
+    <div>已经成年</div>
+{% else %}
+    <div>未成年</div>
+{% endif %}
+
+{% for book in books %}
+    <div>图书名称：{{ book.name }}，价格：{{ book.price }}</div>
+	
+{% endfor %}
+
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+{#<h1>我是父模版文字</h1>#}
+<ul>
+    <li><a href="/">首页</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+{#这里是子模版的内容#}
+{% block content %}{% endblock %}
+</body>
+</html>
