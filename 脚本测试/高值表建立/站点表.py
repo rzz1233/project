@@ -3,7 +3,7 @@ import requests
 
 
 def station_data():
-    url = 'http://10.18.41.53:8000/high_value_analysis/get_std_analysis_value?json={"start_time":"2025-01-01","end_time":"2025-01-01","pollutant_id":134004,"site_type":0,"audit_type":"0,1,2,3","column_type":0}'
+    url = 'http://10.18.41.53:8000/high_value_analysis/get_std_analysis_value?json={"start_time":"2025-01-06","end_time":"2025-01-06","pollutant_id":134004,"site_type":0,"audit_type":"0,1,2,3","column_type":0}'
     try:
         res = requests.get(url)
         # 检查响应状态码

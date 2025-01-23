@@ -3,7 +3,7 @@ import requests
 from datetime import datetime
 
 def shi_data():
-    url = 'http://127.0.0.1:9020/high_value_analysis/get_analysis_value?json={"start_time":"2024-12-20","end_time":"2024-12-20","pollutant_id":134004,"site_type":2,"audit_type":"0,1,2,3","column_type":0}'
+    url = 'http://127.0.0.1:9020/high_value_analysis/get_analysis_value?json={"start_time":"2025-01-06","end_time":"2025-01-06","pollutant_id":134004,"site_type":2,"audit_type":"0,1,2,3","column_type":0}'
     try:
         # 发送请求
         res = requests.get(url)
