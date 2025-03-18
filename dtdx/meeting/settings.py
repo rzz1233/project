@@ -130,34 +130,50 @@ USE_TZ = True
 import logging.handlers
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': 'myapp.log',  # 日志文件名
-            'when': 'midnight',  # 每天午夜切换日志文件
-            'backupCount': 3,  # 保留最近 3 天的日志文件
-            'formatter': 'verbose',  # 使用自定义的格式化器
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {"format": "{levelname} {message}", "style": "{"},
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "file": {
+            "level": "INFO",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "when": "midnight",  # 每天午夜轮转
+            "backupCount": 7,  # 保留30天的日志
+            "interval": 1,  # 每隔1天
+            "filename": os.path.join(BASE_DIR, "logs/api.log"),
+            "formatter": "verbose",
         },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": True,
         },
-        'myapp.tasks': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': False,
+        "APScheduler": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": True,
         },
-    },
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {message}',
-            'style': '{',
+        "StationScheduler": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "transfer": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": True,
         },
     },
 }

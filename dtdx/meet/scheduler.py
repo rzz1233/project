@@ -6,73 +6,32 @@ import logging
 from meet.models import MechanicsOnlineDayTest,Meetinglist,Attendee
 import requests
 from django.utils import timezone
+import os
 
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# 获取项目根目录并确保 logs 文件夹存在
+log_dir = os.path.join(BASE_DIR, "logs")
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
 
-
-# def sync_clue_to_mechanics():
-#     logger.info("sync_clue_to_mechanics...")
-#
-#     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-#     # 获取昨天的日期
-#     yesterday = (datetime.now() - timedelta(days=3)).strftime("%Y-%m-%d")
-#
-#     url = "http://10.18.41.229:18085/service/serviceinterface/search/run.action"
-#     params = {
-#         "token": "9bc47b9636af2d76dd3a9ec9168a23d1",
-#         "interfaceId": "475872ce7c006363e998246f2c309d72",
-#         "START_TIME": yesterday,
-#         "END_TIME": yesterday
-#     }
-#
-#     try:
-#         response = requests.get(url, params=params)
-#         response.raise_for_status()
-#         data = response.json().get("data", [])
-#         county_dic = {"北京市":1,  "海淀区":2, "朝阳区":3, "大兴区":4, "房山区":5, "石景山区":6, "东城区":7, "西城区":8, "平谷区":9, "密云区":10, "怀柔区":11, "顺义区":12, "门头沟区":13, "通州区":14, "昌平区":15, "延庆区":16, "丰台区":17}
-#
-#         for item in data:
-#             county_name = item.get("REGION_NAME")
-#             county_id = county_dic.get(county_name, None)
-#             # 检查是否已有相同的记录（datetime 和 county_id）
-#             if not MechanicsOnlineDayTest.objects.filter(
-#                     datetime=datetime.strptime(item.get("DATETIME") + " 00:00:00", "%Y-%m-%d %H:%M:%S"),
-#                     county_id=county_id).exists():
-#                 MechanicsOnlineDayTest.objects.create(
-#                     county=county_name,
-#                     online_num=item.get("ZXSL"),
-#                     zongliangtongbi=None,
-#                     zonglianghuanbi=None,
-#                     pingjungongshi=item.get("PJGS"),
-#                     gongshitongbi=None,
-#                     gongshihuanbi=None,
-#                     kaigonglv=item.get("KGL"),
-#                     kaigonglvtongbi=None,
-#                     kaigonglvhuanbi=None,
-#                     gongzuoyebili=item.get("GZYBL"),
-#                     kaigongshu=item.get("KGSL"),
-#                     zonggongshi=item.get("ZGS"),
-#                     gaogongzuoyeshu=item.get("GZYS"),
-#                     datetime=datetime.strptime(item.get("DATETIME") + " 00:00:00", "%Y-%m-%d %H:%M:%S"),
-#                     county_id=county_id
-#                 )
-#                 logger.info(f"数据保存成功: {county_name} {item.get('DATETIME')}")
-#             else:
-#                 logger.info(f"数据已存在, 跳过保存: {county_name} {item.get('DATETIME')}")
-#
-#     except requests.RequestException as e:
-#         logger.error(f"请求失败: {e}")
-
-# 设置日志
+# 创建日志记录器
 logger = logging.getLogger('myapp.tasks')
-logger.setLevel(logging.INFO)
-# 创建文件处理器
-file_handler = logging.FileHandler('myapp.log')
+logger.setLevel(logging.INFO)  # 设置日志级别
+
+# 创建文件处理器（日志文件路径可以动态生成）
+log_file_path = os.path.join(log_dir, 'myapp.log')
+
+# 创建文件处理器，设置日志级别
+file_handler = logging.FileHandler(log_file_path)
 file_handler.setLevel(logging.INFO)
+
 # 创建格式化器
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(formatter)
+
+# 将文件处理器添加到日志记录器
 logger.addHandler(file_handler)
 
 def update_meeting_status():
