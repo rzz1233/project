@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.decorators import api_view
 from meet.models import Login, Users, Dept, Meetinglist, Attendee
-from meet.serializers import LoginSerializers, UserSerializers, MeetinglistSerializer, AttendeeSerializer, DeptSerializers,UsersSerializer
+from meet.serializers import LoginSerializers, UserSerializers, MeetinglistSerializer, AttendeeSerializer, DeptSerializers,UsersSerializer,QiandaoSerializer
 from meet.auth import LoginPagination
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -55,12 +55,7 @@ def login(request):
     user = authenticate(username=username, password=password)
 
     if user is not None:
-        # 创建访问令牌和刷新令牌
-        access_token = AccessToken.for_user(user)
-        refresh_token = RefreshToken.for_user(user)
         return Response({
-            'access': str(access_token),
-            'refresh': str(refresh_token),
             'is_superuser': user.is_superuser
         }, status=status.HTTP_200_OK)
     else:
@@ -117,7 +112,7 @@ class DeptView(viewsets.ModelViewSet):
 class MeetinglistView(viewsets.ModelViewSet):
     queryset = Meetinglist.objects.all()
     serializer_class = MeetinglistSerializer
-    # permission_classes = [IsAuthenticated]  # 仅允许经过身份验证的用户访问
+    permission_classes = [IsAuthenticated]  # 仅允许经过身份验证的用户访问
     # 预约时间冲突
     @action(detail=False, methods=['get'])
     def check_time_conflict(self, request):
@@ -225,21 +220,24 @@ class QiandaoView(APIView):
     def get(self, request, *args, **kwargs):
         today_date = datetime.now().date()
         current_date = request.query_params.get("date", today_date)
+        current_time = datetime.now().time()  # 新增当前时间获取
         users = Users.objects.all()
         meetlist = Meetinglist.objects.filter(date=current_date)
         lis = []
         for meet in meetlist:
             for user in users:
                 if meet.dept_id == user.dept_id:
-                    # 每次迭代都创建新的字典，避免共享问题
+                    # 添加时间判断逻辑
+                    status = '签到' if current_time <= meet.starttime else '未签到'
                     dic = {
                         'meetname': meet.title,
                         'user': user.name,
                         'meetdate': meet.date,
                         'check_time': meet.starttime,
-                        'status': '签到',
+                        'status': status,  # 替换固定值
                     }
                     lis.append(dic)
+        serializer = QiandaoSerializer(lis, many=True)
+        return Response(serializer.data)
 
-        return Response(lis)
 

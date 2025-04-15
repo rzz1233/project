@@ -75,4 +75,13 @@ class qiandaoSerializer(serializers.ModelSerializer):
         model = qiandao
         fields = '__all__'
 
+class QiandaoSerializer(serializers.Serializer):
+    meetname = serializers.CharField(max_length=64)
+    user = serializers.CharField(max_length=64)
+    meetdate = serializers.DateField()
+    check_time = serializers.TimeField()
+    status = serializers.CharField(max_length=64)
+
+
+
 
